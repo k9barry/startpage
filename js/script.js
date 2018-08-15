@@ -67,6 +67,13 @@ function updateClock() {
 	var currentHours = currentTime.getHours ();
 	var currentMinutes = currentTime.getMinutes ();
 	var currentSeconds = currentTime.getSeconds ();
+	var currentDate = currentTime.getSeconds ();
+	var month = currentTime.getMonth();
+	var day = currentTime.getDate() ;
+	var date = currentTime.getDay() ;
+	var year = currentTime.getFullYear();
+	var months = new Array ('January','February','March','April','May','June','July','August','September','October','November','December'); 
+	var days = new Array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
 
 	// Pad the minutes and seconds with leading zeros, if required
 	currentMinutes = (currentMinutes < 10 ? "0" : "") + currentMinutes;
@@ -82,7 +89,7 @@ function updateClock() {
 	currentHours = (currentHours == 0) ? 12 : currentHours;
 
 	// Compose the string for display
-	var currentTimeString = currentHours + ":" + currentMinutes + ":" + currentSeconds + " " + timeOfDay;
+	var currentTimeString = days[date] + " " + months[month] + " " + day + " " + year + "  - " + currentHours + ":" + currentMinutes + ":" + currentSeconds + " " + timeOfDay;
 
 	// Fill '#clock' div with time
 	$("#clock").html(currentTimeString);
