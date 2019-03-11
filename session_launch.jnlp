@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>    <!-- JNLP File for Java Video Viewer Application -->
+    <jnlp spec="1.0+" codebase="http://gcm16:80/viewers">
+        <information>
+            <title>KVM Session Viewer</title>
+            <vendor>International Business Machines Corporation</vendor>
+            <description>KVM Viewer for IBM Appliances</description>
+            <description kind="short">KVM Viewer for IBM Appliances</description>
+        </information>
+
+        <security>
+            <all-permissions/>
+        </security>
+
+                        <resources>
+            <j2se version="1.7+"/>
+            <jar href="avctVideoV.jar" main="true"/>
+                            <property name="user.variant" value="ibm"/>
+                <property name="oem.variant"  value="ibm"/>
+            
+                                </resources>
+
+                    <resources os="Windows" arch="x86">
+                <nativelib href="avctKVMIOWin32.jar" download="eager"/>
+                <nativelib href="avctVMAPI_DLLWin32.jar" download="eager"/>
+                <nativelib href="avctJPCSCWin32.jar" download="eager"/>
+            </resources>
+
+            <resources os="Windows" arch="amd64">
+                <nativelib href="avctKVMIOWin64.jar" download="eager"/>
+                <nativelib href="avctVMAPI_DLLWin64.jar" download="eager"/>
+                                    <nativelib href="avctJPCSCWin64.jar" download="eager"/>
+                            </resources>
+
+            <resources os="Windows" arch="x86_64">
+                <nativelib href="avctKVMIOWin64.jar" download="eager"/>
+                <nativelib href="avctVMAPI_DLLWin64.jar" download="eager"/>
+                                    <nativelib href="avctJPCSCWin64.jar" download="eager"/>
+                            </resources>
+
+            <resources os="Linux" arch="x86">
+                <nativelib href="avctKVMIOLinux32.jar" download="eager"/>
+                <nativelib href="avctVMAPI_DLLLinux32.jar" download="eager"/>
+                <nativelib href="avctJPCSCLinux32.jar" download="eager"/>
+            </resources>
+
+            <resources os="Linux" arch="i386">
+                <nativelib href="avctKVMIOLinux32.jar" download="eager"/>
+                <nativelib href="avctVMAPI_DLLLinux32.jar" download="eager"/>
+                <nativelib href="avctJPCSCLinux32.jar" download="eager"/>
+            </resources>
+
+            <resources os="Linux" arch="i586">
+                <nativelib href="avctKVMIOLinux32.jar" download="eager"/>
+                <nativelib href="avctVMAPI_DLLLinux32.jar" download="eager"/>
+                <nativelib href="avctJPCSCLinux32.jar" download="eager"/>
+            </resources>
+
+            <resources os="Linux" arch="i686">
+                <nativelib href="avctKVMIOLinux32.jar" download="eager"/>
+                <nativelib href="avctVMAPI_DLLLinux32.jar" download="eager"/>
+                <nativelib href="avctJPCSCLinux32.jar" download="eager"/>
+            </resources>
+
+            <resources os="Linux" arch="amd64">
+                <nativelib href="avctKVMIOLinux64.jar" download="eager"/>
+                <nativelib href="avctVMAPI_DLLLinux64.jar" download="eager"/>
+                                    <nativelib href="avctJPCSCLinux64.jar" download="eager"/>
+                            </resources>
+
+            <resources os="Linux" arch="x86_64">
+                <nativelib href="avctKVMIOLinux64.jar" download="eager"/>
+                <nativelib href="avctVMAPI_DLLLinux64.jar" download="eager"/>
+                                    <nativelib href="avctJPCSCLinux64.jar" download="eager"/>
+                            </resources>
+
+            
+                            <resources os="Mac\ OS\ X" arch="x86_64">
+                  <nativelib href="avctKVMIOMac64.jar"/>
+                  <nativelib href="avctVMAPI_DLLMac64.jar"/>
+                  <nativelib href="avctJPCSCMac64.jar"/>
+                </resources>
+            
+            
+        
+        <application-desc main-class="com.avocent.msd.kvm.Main">
+            <argument>title="GCM16 - 520844-00FF86"</argument>
+            <argument>devicetype=avsp</argument>
+            <argument>path=a:gcm16,r:520844-00FF86,c:0,e:1,s:"520844-00FF86",l:120</argument>
+            <argument>oem=IBM</argument>
+            <argument>user=Admin</argument>
+            <argument>password=1AVCT-340516774</argument>
+            <argument>helpurl=""</argument>
+
+                                    
+                    </application-desc>
+    </jnlp>
+    
