@@ -1,3 +1,4 @@
+[![Docker Image CI](https://github.com/k9barry/startpage/actions/workflows/docker-image.yml/badge.svg)](https://github.com/k9barry/startpage/actions/workflows/docker-image.yml)
 # startpage.rwrt
 
 ## Configuration
