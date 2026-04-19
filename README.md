@@ -11,21 +11,24 @@ to Dashy's YAML-driven, status-checking, icon-pack-aware dashboard.
 
 ```
 .
-├── conf.yml                     ← PUBLIC  — tracked in git (cleaver.me + SaaS)
-├── conf.private.yml             ← PRIVATE — gitignored (internal hosts)
-├── conf.private.example.yml     ← Template showing structure only
-├── docker-compose.yml
+├── conf.yml                          ← PUBLIC  — tracked (cleaver.me + SaaS)
+├── conf.private.yml                  ← PRIVATE — gitignored (internal hosts)
+├── conf.private.example.yml          ← Template showing structure only
+├── Dockerfile                        ← Bakes conf.yml into a Dashy-based image
+├── .dockerignore
+├── docker-compose.yml                ← Local dev — upstream dashy + mounts
+├── docker-compose.server.yml.example ← Server — pulls k9barry/startpage image
+├── .github/workflows/docker-image.yml ← CI: build + push to Docker Hub
 ├── .gitignore
-├── user-data/                   ← Runtime volume (gitignored)
+├── user-data/                        ← Runtime volume (gitignored)
 ├── README.md
+├── LICENSE
 └── legacy/
-    └── index.html               ← Original crshd-style start page, archived
+    └── index.html                    ← Original crshd-style start page, archived
 ```
 
 Dashy loads `conf.yml` as the main page and follows its `pages:` reference
 to `conf.private.yml`, which shows up as an **Internal** tab in the nav bar.
-If `conf.private.yml` isn't on disk, the main page still loads; only the
-Internal tab errors.
 
 ## What lives where
 
@@ -53,9 +56,52 @@ hostname (e.g. `nwpsappprd`, `confluence`, `s2netbox`), or a JAFCP.com
 infrastructure subdomain (snipeit, dozzle, traefik, ntfy, sql, viavi, noaa)
 is in the private file.
 
-## First-time setup
+## Deployment modes
 
-Requires Docker + Docker Compose.
+The repo supports two deployment patterns — pick whichever fits.
+
+### Mode A: Pull prebuilt image (server / production)
+
+This is how the production host deploys. GitHub Actions builds a Docker image
+on every push to `master` that changes `conf.yml` or the Dockerfile, bakes the
+public config in, and pushes to Docker Hub as `k9barry/startpage:latest`. The
+server just pulls that image.
+
+**On the server, one time:**
+
+```bash
+# Somewhere like /opt/startpage
+curl -O https://raw.githubusercontent.com/k9barry/startpage/master/docker-compose.server.yml.example
+mv docker-compose.server.yml.example docker-compose.yml
+
+# Bootstrap the private config
+curl -O https://raw.githubusercontent.com/k9barry/startpage/master/conf.private.example.yml
+cp conf.private.example.yml conf.private.yml
+# edit conf.private.yml with your real internal items
+
+docker compose up -d
+# Dashy is now at http://<host>:4000
+```
+
+**To deploy a config change:**
+
+```bash
+# Local:
+git add conf.yml && git commit -m "..." && git push
+# CI builds + pushes image (~2 min)
+
+# On the server:
+docker compose pull && docker compose up -d
+```
+
+Or install Watchtower once (sample block commented at the bottom of
+`docker-compose.server.yml.example`) and config updates auto-deploy within 5
+minutes of the image hitting Docker Hub.
+
+### Mode B: Build locally from source (dev / testing / air-gapped)
+
+Uses the upstream `lissy93/dashy:3.2` image and bind-mounts both config files.
+Edits to `conf.yml` are reflected live (hot-reload on save), no rebuild needed.
 
 ```bash
 git clone git@github.com:k9barry/startpage.git
@@ -64,15 +110,14 @@ cd startpage
 # REQUIRED before first run — the private config mount is strict.
 cp conf.private.example.yml conf.private.yml
 # edit conf.private.yml with your actual internal items
-# (a populated version will already exist on the production host)
 
 docker compose up -d
 # Dashy is now at http://<host>:4000
 ```
 
-### Why the copy step is mandatory
+### Why the `cp` step is mandatory (both modes)
 
-`docker-compose.yml` bind-mounts `./conf.private.yml` with
+Both compose files bind-mount `./conf.private.yml` with
 `create_host_path: false`. If the file isn't present, Compose refuses to
 start with an error like:
 
@@ -91,32 +136,36 @@ If you want to run just the public page (e.g. on a demo host, or because
 you aren't on the Madison County network), remove two things:
 
 1. The `pages:` block at the top of `conf.yml` (lines ~33–36).
-2. The `conf.private.yml` bind mount in `docker-compose.yml`.
+2. The `conf.private.yml` bind mount in whichever compose file you're using.
 
 Then `docker compose up -d` will work without bootstrapping a private
 config.
 
+## CI/CD pipeline
+
+`.github/workflows/docker-image.yml` builds and pushes the image.
+
+- **Triggers:** push to `master`/`main` that touches `conf.yml`, `Dockerfile`,
+  `.dockerignore`, or the workflow itself; a weekly Monday 06:00 UTC schedule
+  (to pick up upstream Dashy base-image patches); and manual
+  `workflow_dispatch`.
+- **Tags pushed:** `latest` (tracks default branch) and `sha-<short>`
+  (pinnable for rollback).
+- **Platforms:** `linux/amd64`, `linux/arm64`.
+- **Required secrets:** `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`. Both carry
+  over from the old repo; rotate via Docker Hub → Account Settings → Personal
+  access tokens, then paste into Repo Settings → Secrets and variables →
+  Actions.
+
+The `.dockerignore` explicitly excludes `conf.private.yml` (and its example)
+from the build context as a second layer of defense, in addition to git
+ignoring it.
+
 ## Behind Traefik
 
 You already run Traefik at `traefik.jafcp.com`. Uncomment the `labels:` block
-and remove `ports:` from `docker-compose.yml` to publish at
+in your compose file and remove `ports:` to publish at
 `https://start.jafcp.com` with an automatic Let's Encrypt cert.
-
-> [!WARNING]
-> If you mount `conf.private.yml`, the Internal page can expose internal
-> hostnames, IPs, and service URLs to anyone who can access the dashboard.
-> Do **not** publish Dashy at a public hostname unless you also restrict
-> access to it.
->
-> Protect the dashboard with at least one of:
-> - Dashy authentication
-> - Traefik auth middleware (for example, basic auth or forward auth)
-> - A Traefik IP allowlist
-> - VPN-only/private-network access
->
-> If public access is required for the external links, keep the Internal tab
-> behind one of the protections above, or do not mount `conf.private.yml` on
-> the public instance.
 
 ## Updating
 
@@ -156,7 +205,5 @@ Pick one; don't mix without care.
 
 ## License
 
-This repository is derived from the original
-[crshd startpage](https://github.com/Crshd/Startpage) (MIT, © 2010 Christian Brassat)
-and is powered by [Dashy](https://dashy.to) (MIT, © Alicia Sykes).
-See the [LICENSE](LICENSE) file for the full license text and upstream attribution.
+MIT, inherited from the original crshd startpage by Christian Brassat (2010).
+Dashy is MIT-licensed by Alicia Sykes.

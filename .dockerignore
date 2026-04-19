@@ -1,0 +1,29 @@
+# Keep the image clean and the build context fast.
+
+# SECURITY: belt-and-suspenders — conf.private.yml is already gitignored, but
+# if a developer ever runs `docker build` on a host where the file exists
+# locally, this line guarantees it still can't leak into the image.
+conf.private.yml
+conf.private.example.yml
+
+# Repo meta / docs / CI — not needed at runtime.
+.git
+.github
+.gitignore
+.gitattributes
+README.md
+LICENSE
+legacy
+
+# Dashy runtime state volume, if present locally.
+user-data
+
+# The dev compose file targets upstream lissy93/dashy, not this image.
+docker-compose.yml
+
+# Editor / OS cruft.
+.DS_Store
+.idea
+.vscode
+*.swp
+*~

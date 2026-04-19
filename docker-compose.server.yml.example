@@ -1,0 +1,68 @@
+---
+# -----------------------------------------------------------------------------
+# Server / production deployment
+# -----------------------------------------------------------------------------
+# Copy this file to your server (rename to docker-compose.yml is fine) and
+# maintain it there. It's NOT the same file as the repo's dev docker-compose.yml
+# — this one pulls the pre-built k9barry/startpage image from Docker Hub, which
+# already has conf.yml baked in by CI.
+#
+# Prerequisites on the server:
+#   1. Place conf.private.yml in the same directory as this file.
+#      Copy the structure from conf.private.example.yml in the repo.
+#   2. docker compose up -d
+#
+# Config update flow:
+#   * Edit conf.yml, push to GitHub master →
+#   * GitHub Actions builds k9barry/startpage:latest →
+#   * On the server: docker compose pull && docker compose up -d
+#     (or let Watchtower do it automatically — see the optional block below)
+# -----------------------------------------------------------------------------
+
+services:
+  startpage:
+    image: k9barry/startpage:latest
+    container_name: startpage
+    hostname: startpage
+    restart: unless-stopped
+    ports:
+      - "4000:8080"
+    volumes:
+      # Public conf.yml is baked into the image — no mount here.
+      # Mount ONLY the private config, strict mode so compose fails fast if
+      # conf.private.yml hasn't been created from the example yet.
+      - type: bind
+        source: ./conf.private.yml
+        target: /app/user-data/conf.private.yml
+        bind:
+          create_host_path: false
+    environment:
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "node", "/app/services/healthcheck"]
+      interval: 90s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+# -----------------------------------------------------------------------------
+# Optional: Watchtower auto-updates. Polls Docker Hub every 5 min and pulls
+# new k9barry/startpage:latest pushes. Remove if you prefer manual deploys.
+# -----------------------------------------------------------------------------
+#  watchtower:
+#    image: containrrr/watchtower
+#    container_name: watchtower-startpage
+#    restart: unless-stopped
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    command: --interval 300 --cleanup startpage
+
+# -----------------------------------------------------------------------------
+# Traefik users: publish startpage at a host like start.jafcp.com.
+# -----------------------------------------------------------------------------
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.startpage.rule=Host(`start.jafcp.com`)"
+#      - "traefik.http.routers.startpage.entrypoints=websecure"
+#      - "traefik.http.routers.startpage.tls.certresolver=letsencrypt"
+#      - "traefik.http.services.startpage.loadbalancer.server.port=8080"
