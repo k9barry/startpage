@@ -1,0 +1,65 @@
+---
+# -----------------------------------------------------------------------------
+# Dashy — JAFCP Start Page
+# -----------------------------------------------------------------------------
+# First-time setup:
+#   cp conf.private.example.yml conf.private.yml
+#   # edit conf.private.yml with your internal-only items
+#   docker compose up -d
+#
+# Update:
+#   docker compose pull && docker compose up -d
+# -----------------------------------------------------------------------------
+
+services:
+  dashy:
+    image: lissy93/dashy:3.2
+    container_name: dashy
+    hostname: startpage
+    restart: unless-stopped
+    ports:
+      - "4000:8080"
+    volumes:
+      - type: bind
+        source: ./user-data
+        target: /app/user-data
+      # Public config — tracked in git.
+      - type: bind
+        source: ./conf.yml
+        target: /app/user-data/conf.yml
+        bind:
+          create_host_path: false
+      # Private config — .gitignore'd. This mount is STRICT: Compose will
+      # refuse to start if ./conf.private.yml is missing (create_host_path:
+      # false), rather than silently creating a directory and letting Dashy
+      # fail later with a confusing YAML parse error.
+      #
+      # Bootstrap on a fresh clone:
+      #   cp conf.private.example.yml conf.private.yml
+      #
+      # Public-only deploy (no internal links): remove this mount AND remove
+      # the `pages:` block from conf.yml (or point it at a valid yml).
+      - type: bind
+        source: ./conf.private.yml
+        target: /app/user-data/conf.private.yml
+        bind:
+          create_host_path: false
+    environment:
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "node", "/app/services/healthcheck"]
+      interval: 90s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+# -----------------------------------------------------------------------------
+# Traefik users: uncomment the labels block and remove `ports:` above to
+# publish via your existing reverse proxy (e.g. https://start.jafcp.com).
+# -----------------------------------------------------------------------------
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.dashy.rule=Host(`start.jafcp.com`)"
+#      - "traefik.http.routers.dashy.entrypoints=websecure"
+#      - "traefik.http.routers.dashy.tls.certresolver=letsencrypt"
+#      - "traefik.http.services.dashy.loadbalancer.server.port=8080"

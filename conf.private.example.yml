@@ -1,0 +1,39 @@
+---
+# =============================================================================
+# JAFCP Start Page — PRIVATE CONFIG TEMPLATE
+# =============================================================================
+# This file IS tracked in git. It shows how to structure conf.private.yml
+# without leaking real internal hostnames or IPs.
+#
+# Usage on a new machine:
+#   cp conf.private.example.yml conf.private.yml
+#   # edit conf.private.yml with your actual internal items
+#
+# The real conf.private.yml is listed in .gitignore and MUST NOT be committed.
+# =============================================================================
+
+pageInfo:
+  title: JAFCP Start Page — Internal
+  description: LAN / VPN-only services
+
+sections:
+
+  - name: Example Section
+    icon: fas fa-network-wired
+    displayData:
+      cols: 3
+    items:
+      - title: Example Internal Web UI
+        description: short note, e.g. RFC1918 IP
+        url: https://example.internal
+        icon: favicon
+
+      - title: Example Device by IP
+        description: 10.0.0.1
+        url: http://10.0.0.1
+        icon: fas fa-server
+
+      - title: Example Edge Protocol Handler
+        description: Opens in Edge
+        url: microsoft-edge:http://internal-app/
+        icon: fab fa-edge

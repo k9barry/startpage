@@ -1,0 +1,23 @@
+# ---------------------------------------------------------------------------
+# CRITICAL: do not commit the private config. Internal hostnames, RFC1918 IPs,
+# and site-identifying ticket URLs live here. Template is conf.private.example.yml.
+# docker-compose.yml mounts this file with create_host_path: false, so Compose
+# will fail-fast if the file is missing — keep it ignored, not forgotten.
+# ---------------------------------------------------------------------------
+conf.private.yml
+
+# Dashy runtime state — icons, backups, UI-saved configs
+user-data/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# Secrets
+.env
+*.pem
+*.key
