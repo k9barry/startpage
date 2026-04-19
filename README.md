@@ -61,7 +61,7 @@ Requires Docker + Docker Compose.
 git clone git@github.com:k9barry/startpage.git
 cd startpage
 
-# Create your private config from the template
+# REQUIRED before first run — the private config mount is strict.
 cp conf.private.example.yml conf.private.yml
 # edit conf.private.yml with your actual internal items
 # (a populated version will already exist on the production host)
@@ -70,9 +70,31 @@ docker compose up -d
 # Dashy is now at http://<host>:4000
 ```
 
-If `conf.private.yml` doesn't exist when `docker compose up` runs, Docker
-will silently create an empty directory at that path and Dashy will fail
-to parse it. Always create the file first.
+### Why the copy step is mandatory
+
+`docker-compose.yml` bind-mounts `./conf.private.yml` with
+`create_host_path: false`. If the file isn't present, Compose refuses to
+start with an error like:
+
+```
+error mounting "/.../conf.private.yml" to rootfs at
+"/app/user-data/conf.private.yml": no such file or directory
+```
+
+This is deliberate — it prevents Docker's old "silently create a host
+directory, then mount the empty dir as a YAML file, then fail mysteriously
+inside the container" footgun. Loud failure, clear remedy.
+
+### Public-only deployment (no internal links)
+
+If you want to run just the public page (e.g. on a demo host, or because
+you aren't on the Madison County network), remove two things:
+
+1. The `pages:` block at the top of `conf.yml` (lines ~33–36).
+2. The `conf.private.yml` bind mount in `docker-compose.yml`.
+
+Then `docker compose up -d` will work without bootstrapping a private
+config.
 
 ## Behind Traefik
 

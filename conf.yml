@@ -26,9 +26,13 @@ pageInfo:
       path: https://dashy.to/docs
 
 # -----------------------------------------------------------------------------
-# Multi-page setup. The "Internal" page loads from conf.private.yml (gitignored).
-# If the file isn't present, Dashy shows an error on that page only — the main
-# public page still loads fine.
+# Multi-page setup. The "Internal" page loads from conf.private.yml, which is
+# gitignored and bind-mounted into /app/user-data/ by docker-compose.yml. The
+# compose mount is strict (create_host_path: false), so the file is guaranteed
+# to exist at runtime or the container won't start — see docker-compose.yml.
+#
+# For a public-only deploy with no internal links, delete both this `pages:`
+# block AND the conf.private.yml mount in docker-compose.yml.
 # -----------------------------------------------------------------------------
 pages:
   - name: Internal

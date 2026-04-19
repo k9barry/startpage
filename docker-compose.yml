@@ -20,13 +20,30 @@ services:
     ports:
       - "4000:8080"
     volumes:
-      - ./user-data:/app/user-data
+      - type: bind
+        source: ./user-data
+        target: /app/user-data
       # Public config — tracked in git.
-      - ./conf.yml:/app/user-data/conf.yml
-      # Private config — .gitignore'd. MUST exist before first run; create it
-      # from conf.private.example.yml or Docker will mount an empty directory
-      # in its place and Dashy's "Internal" page will fail to load.
-      - ./conf.private.yml:/app/user-data/conf.private.yml
+      - type: bind
+        source: ./conf.yml
+        target: /app/user-data/conf.yml
+        bind:
+          create_host_path: false
+      # Private config — .gitignore'd. This mount is STRICT: Compose will
+      # refuse to start if ./conf.private.yml is missing (create_host_path:
+      # false), rather than silently creating a directory and letting Dashy
+      # fail later with a confusing YAML parse error.
+      #
+      # Bootstrap on a fresh clone:
+      #   cp conf.private.example.yml conf.private.yml
+      #
+      # Public-only deploy (no internal links): remove this mount AND remove
+      # the `pages:` block from conf.yml (or point it at a valid yml).
+      - type: bind
+        source: ./conf.private.yml
+        target: /app/user-data/conf.private.yml
+        bind:
+          create_host_path: false
     environment:
       - NODE_ENV=production
     healthcheck:
