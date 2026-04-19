@@ -80,6 +80,22 @@ You already run Traefik at `traefik.jafcp.com`. Uncomment the `labels:` block
 and remove `ports:` from `docker-compose.yml` to publish at
 `https://start.jafcp.com` with an automatic Let's Encrypt cert.
 
+> [!WARNING]
+> If you mount `conf.private.yml`, the Internal page can expose internal
+> hostnames, IPs, and service URLs to anyone who can access the dashboard.
+> Do **not** publish Dashy at a public hostname unless you also restrict
+> access to it.
+>
+> Protect the dashboard with at least one of:
+> - Dashy authentication
+> - Traefik auth middleware (for example, basic auth or forward auth)
+> - A Traefik IP allowlist
+> - VPN-only/private-network access
+>
+> If public access is required for the external links, keep the Internal tab
+> behind one of the protections above, or do not mount `conf.private.yml` on
+> the public instance.
+
 ## Updating
 
 ```bash
@@ -118,5 +134,7 @@ Pick one; don't mix without care.
 
 ## License
 
-MIT, inherited from the original crshd startpage by Christian Brassat (2010).
-Dashy is MIT-licensed by Alicia Sykes.
+This repository is derived from the original
+[crshd startpage](https://github.com/Crshd/Startpage) (MIT, © 2010 Christian Brassat)
+and is powered by [Dashy](https://dashy.to) (MIT, © Alicia Sykes).
+See the [LICENSE](LICENSE) file for the full license text and upstream attribution.

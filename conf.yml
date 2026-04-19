@@ -40,7 +40,7 @@ appConfig:
   iconSize: medium
   language: en
   defaultOpeningMethod: newtab
-  statusCheck: false
+  statusCheck: true
   statusCheckInterval: 0
   faviconApi: allesedv
   preventWriteToDisk: false

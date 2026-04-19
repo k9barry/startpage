@@ -13,7 +13,7 @@
 
 services:
   dashy:
-    image: lissy93/dashy:latest
+    image: lissy93/dashy:2.1.2
     container_name: dashy
     hostname: startpage
     restart: unless-stopped
