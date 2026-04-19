@@ -1,0 +1,339 @@
+---
+# =============================================================================
+# JAFCP Start Page — PUBLIC CONFIG (safe to commit)
+# =============================================================================
+# This file contains only:
+#   * cleaver.me personal homelab (public DNS, owner's choice to expose)
+#   * public vendor SaaS portals (Motorola, AT&T, Tyler SaaS, state of IN, etc.)
+#   * public-facing agency pages
+#
+# Internal hosts (RFC1918 IPs, *.madison.local, bare hostnames, Tyler New World
+# production hosts) live in conf.private.yml, which is .gitignore'd.
+#
+# To enable the Internal page:
+#   cp conf.private.example.yml conf.private.yml
+#   # edit conf.private.yml with your site-specific items
+#   docker compose restart
+# =============================================================================
+
+pageInfo:
+  title: JAFCP Start Page
+  description: Madison County Dispatch & Homelab
+  navLinks:
+    - title: GitHub
+      path: https://github.com/k9barry/startpage
+    - title: Dashy Docs
+      path: https://dashy.to/docs
+
+# -----------------------------------------------------------------------------
+# Multi-page setup. The "Internal" page loads from conf.private.yml (gitignored).
+# If the file isn't present, Dashy shows an error on that page only — the main
+# public page still loads fine.
+# -----------------------------------------------------------------------------
+pages:
+  - name: Internal
+    path: conf.private.yml
+
+appConfig:
+  theme: nord-frost
+  layout: auto
+  iconSize: medium
+  language: en
+  defaultOpeningMethod: newtab
+  statusCheck: false
+  statusCheckInterval: 0
+  faviconApi: allesedv
+  preventWriteToDisk: false
+  preventLocalSave: false
+  enableErrorReporting: false
+  routingMode: history
+  disableUpdateChecks: false
+
+# =============================================================================
+# Sections (PUBLIC)
+# =============================================================================
+sections:
+
+  # ---------------------------------------------------------------------------
+  - name: Homelab — Cleaver.me
+    icon: fas fa-house-signal
+    displayData:
+      cols: 3
+      collapsed: false
+    items:
+      - title: TrueNAS
+        url: https://truenas.cleaver.me
+        icon: hl-truenas
+        statusCheck: true
+      - title: Nginx Proxy Manager
+        url: https://npm.cleaver.me
+        icon: hl-nginxproxymanager
+      - title: Frigate NVR
+        url: https://frigate.cleaver.me
+        icon: hl-frigate
+      - title: Nextcloud
+        url: https://cloud.cleaver.me
+        icon: hl-nextcloud
+      - title: Gitea
+        url: https://gitea.cleaver.me
+        icon: hl-gitea
+      - title: Filebot
+        url: https://file.cleaver.me
+        icon: favicon
+      - title: Plex
+        url: https://plex.cleaver.me
+        icon: hl-plex
+      - title: Jellyfin
+        url: https://jelly.cleaver.me
+        icon: hl-jellyfin
+      - title: Syncthing
+        url: https://syncthing.cleaver.me
+        icon: hl-syncthing
+      - title: Stirling PDF
+        url: https://stirling.cleaver.me
+        icon: hl-stirling-pdf
+      - title: IT Tools
+        url: https://it.cleaver.me
+        icon: hl-it-tools
+      - title: n8n
+        url: https://n8n.cleaver.me
+        icon: hl-n8n
+      - title: Tdarr
+        url: https://tdarr.cleaver.me
+        icon: hl-tdarr
+      - title: MonkeyType
+        url: https://type.cleaver.me
+        icon: favicon
+      - title: Home Assistant
+        url: https://homeassistant.cleaver.me
+        icon: hl-home-assistant
+      - title: Ollama / Open-WebUI
+        url: https://ollama.cleaver.me
+        icon: hl-ollama
+      - title: Duo Security Admin
+        url: https://admin.duosecurity.com
+        icon: favicon
+
+  # ---------------------------------------------------------------------------
+  - name: External Services
+    icon: fas fa-cloud
+    displayData:
+      cols: 3
+    items:
+      - title: JAFCP Homepage
+        url: https://home.jafcp.com
+        icon: favicon
+      - title: GitHub
+        url: https://github.com
+        icon: fab fa-github
+      - title: Docker Hub
+        url: https://hub.docker.com
+        icon: fab fa-docker
+      - title: FirstNet
+        url: https://www.firstnet.com
+        icon: favicon
+      - title: Cloudflare
+        url: https://dash.cloudflare.com/login
+        icon: fab fa-cloudflare
+      - title: Office 365
+        url: https://login.microsoftonline.com/
+        icon: fab fa-microsoft
+
+  # ---------------------------------------------------------------------------
+  - name: Motorola
+    icon: fas fa-walkie-talkie
+    displayData:
+      cols: 3
+    items:
+      - title: MOSS
+        url: https://moss.motorolasolutions.com:8443
+        icon: favicon
+      - title: CommShop360
+        description: MCM-Assets / Commshop asset system
+        url: https://motion.mcmtechnology.com/#/Shell/218/Commshop/Asset
+        icon: favicon
+      - title: Motorola SSO
+        url: https://sso.motorolasolutions.com
+        icon: favicon
+      - title: Motorola Customer Hub
+        url: https://customerhub.motorolasolutions.com
+        icon: favicon
+      - title: MTUG
+        url: https://mtug.clubexpress.com
+        icon: favicon
+      - title: Shop Motorola
+        url: https://shop-business.motorolasolutions.com
+        icon: favicon
+      - title: Moto Licensing Portal
+        description: Opens in Edge
+        url: microsoft-edge:http://conn-auth.motorolasolutions.com/
+        icon: fab fa-edge
+      - title: Moto Tools (akardam)
+        url: http://www.akardam.net/moto/tools/
+        icon: fas fa-toolbox
+      - title: SUS / MotoPatch Portal
+        url: https://sites.google.com/a/motorolasolutions.com/sus-motopatch/
+        icon: favicon
+      - title: NICE User Group
+        url: http://www.niceusergroup.org
+        icon: favicon
+
+  # ---------------------------------------------------------------------------
+  - name: Dispatch — External
+    icon: fas fa-headset
+    displayData:
+      cols: 3
+    items:
+      - title: Verkada Command
+        url: https://command.verkada.com
+        icon: favicon
+      - title: Aladtec Schedule
+        url: https://aladtec.com/mccdispatch
+        icon: favicon
+      - title: Text-to-911 (INdigital)
+        url: https://in.textty.com
+        icon: fas fa-comment-sms
+      - title: RapidSOS Portal
+        url: https://rapidsosportal.com/login
+        icon: favicon
+      - title: what3words
+        url: https://what3words.com/
+        icon: favicon
+      - title: Sonim Cloud
+        url: https://www.sonimcloud.com/
+        icon: favicon
+      - title: AT&T Express Ticketing
+        description: IE only — Asset 26/EGNC/911066/NB
+        url: https://expressticketing.acss.att.com/
+        icon: favicon
+      - title: AT&T ESInet Portal
+        description: Opens in Edge
+        url: microsoft-edge:https://portal.esinet-911.att.com
+        icon: fab fa-edge
+      - title: AT&T Business Center
+        url: https://businesscenter.att.com/ebiz/dashboard/v2/index.html#/dashboard
+        icon: favicon
+      - title: AT&T PremierCare
+        url: https://www.wireless.att.com/premiercare
+        icon: favicon
+      - title: FedEx
+        url: https://www.fedex.com/
+        icon: favicon
+      - title: CommsCoach Portal
+        url: https://app.govworx.net/login/MadisonCoCentral
+        icon: favicon
+      - title: White Pages
+        url: http://www.whitepages.com/
+        icon: favicon
+      - title: MCCOG Road & Sign (ArcGIS)
+        url: https://mccog.maps.arcgis.com/apps/MapSeries/index.html?appid=f9212da322cf41f8b4779e5c5a8635f3
+        icon: fas fa-map
+      - title: Anderson L&P Outages
+        url: https://wov.cityofanderson.com/
+        icon: fas fa-bolt
+      - title: Indiana Power Outages
+        url: https://poweroutage.us/area/state/indiana
+        icon: fas fa-plug-circle-xmark
+      - title: eCats 911 Search
+        url: https://in.ecats911.com/Home/tabid/68/ctl/Login/Default.aspx
+        icon: fas fa-magnifying-glass
+
+  # ---------------------------------------------------------------------------
+  - name: Madison County
+    icon: fas fa-building-columns
+    displayData:
+      cols: 3
+    items:
+      - title: Gateway Reports (IN)
+        url: https://gateway.ifionline.org/report_builder/Default2.aspx?rptType=employComp&rptVer=a
+        icon: favicon
+      - title: Cradlepoint NCM
+        url: https://accounts.cradlepointecm.com
+        icon: favicon
+      - title: Guardian Tracking
+        url: https://guardiantracking.app/madisoncoinmccc/
+        icon: favicon
+      - title: PowerDMS — Madison
+        url: https://powerdms.com/ui/Login.aspx?SiteID=MADISON
+        icon: favicon
+      - title: PowerDMS — MCCD
+        url: https://powerdms.com/ui/Login.aspx?SiteID=MadisonCCD
+        icon: favicon
+      - title: Agency360 FTO
+        url: https://app.agency360.com/app/login/
+        icon: favicon
+      - title: MCCOG GIS
+        url: http://www.mccog.net
+        icon: fas fa-map-location-dot
+      - title: Auditor Asset Mgmt
+        url: https://auditor--madison--in.datapitstop.us/cgi.exe?PAGEID=0010&CALL_PROGRAM=C009ASSETUSERSLOGIN
+        icon: fas fa-file-invoice-dollar
+      - title: Limble Maintenance Ticket
+        url: https://app.limblecmms.com/problem/k31w2818850/62219/40
+        icon: fas fa-wrench
+
+  # ---------------------------------------------------------------------------
+  - name: Tyler SaaS
+    icon: fas fa-car-on
+    displayData:
+      cols: 3
+    items:
+      - title: DSS Dashboard
+        url: https://madisoncountyin-sheriff-dashboard.insights.socrata.com/
+        icon: fas fa-chart-column
+      - title: Crewforce User Mgmt
+        url: https://portal.mobility.tylertech.com/
+        icon: favicon
+      - title: TelmedIQ
+        url: https://madisoncounty.app.telmediq.com/
+        icon: favicon
+      - title: FastSupport (GoToAssist)
+        url: https://www.fastsupport.com/
+        icon: fas fa-life-ring
+
+  # ---------------------------------------------------------------------------
+  - name: Time & Attendance
+    icon: fas fa-user-clock
+    displayData:
+      cols: 3
+    items:
+      - title: Clock In / Out
+        url: https://madisoncountyin.attendanceondemand.com/mobile/ESS3.aew/DEFAULT
+        icon: fas fa-right-to-bracket
+      - title: Supervisor Maintenance
+        url: https://madisoncountyin.attendanceondemand.com/mobile/mss3.aew/default
+        icon: fas fa-user-tie
+      - title: Doculivery (Pay Stubs)
+        url: https://my.doculivery.com/External/madisoncounty/Login.aspx
+        icon: fas fa-money-check-dollar
+
+  # ---------------------------------------------------------------------------
+  - name: State of Indiana
+    icon: fas fa-landmark
+    displayData:
+      cols: 3
+    items:
+      - title: DOC Offender Locator
+        url: https://offenderlocator.idoc.in.gov/idoc-ofs-1.0.2/ofs
+        icon: fas fa-user-lock
+      - title: FEMA Independent Study
+        url: https://training.fema.gov/is/crslist.aspx
+        icon: favicon
+      - title: Acadis Portal
+        url: https://acadisportal.in.gov/AcadisViewer/Login.aspx
+        icon: favicon
+      - title: Aries Portal
+        url: https://www.ariesportal.com/Account/Login
+        icon: favicon
+      - title: MyCase Search
+        url: https://public.courts.in.gov/mycase#/vw/Search
+        icon: fas fa-gavel
+      - title: MyCourts
+        url: https://mycourts.in.gov/
+        icon: fas fa-scale-balanced
+      - title: Project Lifesaver
+        url: https://www.plsdatabase.org/agencies/index.php
+        icon: favicon
+      - title: WebEOC
+        url: https://webeoc.in.gov/eoc7/default.aspx
+        icon: fas fa-triangle-exclamation
