@@ -16,6 +16,16 @@ pageInfo:
   title: JAFCP Start Page — Internal
   description: LAN / VPN-only services
 
+# The pages: block must be present on BOTH conf.yml and conf.private.yml for
+# Dashy's page switcher to persist across navigation. Each sub-page is
+# loaded as an independent config file, so they don't inherit each other's
+# pages definitions.
+pages:
+  - name: Home
+    path: conf.yml
+  - name: Internal
+    path: conf.private.yml
+
 sections:
 
   - name: Example Section
