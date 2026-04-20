@@ -21,7 +21,7 @@ pageInfo:
   description: Madison County Dispatch & Homelab
   navLinks:
     - title: Home
-      path: /
+      path: https://home.jafcp.com/
     - title: GitHub
       path: https://github.com/k9barry/startpage
     - title: Dashy Docs
@@ -56,7 +56,7 @@ appConfig:
   defaultOpeningMethod: newtab
   statusCheck: false
   statusCheckInterval: 0
-  faviconApi: google
+  faviconApi: iconhorse
   preventWriteToDisk: false
   preventLocalSave: false
   enableErrorReporting: false
