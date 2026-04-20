@@ -28,25 +28,22 @@ pageInfo:
 # -----------------------------------------------------------------------------
 # Multi-page setup.
 #
-# Dashy's `pages:` entries MUST point to local or remote YAML config files.
-# A bare route like `/` won't work — Dashy tries to parse it as YAML and
-# errors with "Unable to load config from '/'".
+# Dashy's `pages:` entries point to additional YAML config files that appear
+# as tabs in the page switcher (top-right of the dashboard).
 #
-# To put a Home button next to Internal in Dashy's page switcher, we point
-# Home at this same conf.yml. Dashy loads it as a page and renders the same
-# sections, giving you a reliable "return to main" tab.
+# To navigate BACK to the main page from a sub-page, click the page title
+# ("JAFCP Start Page") at the top of the screen — this is Dashy's built-in
+# behavior, documented at https://dashy.to/docs/alternate-views/ . There is
+# no need to define a "Home" entry in `pages:` or `navLinks:`; doing so fights
+# the built-in UI.
 #
-# The Internal page loads from conf.private.yml, which is gitignored and
-# bind-mounted into /app/user-data/ by docker-compose.yml. The compose mount
-# is strict (create_host_path: false), so the file is guaranteed to exist at
-# runtime or the container won't start.
+# Sub-pages inherit `appConfig` and `pages` from this file automatically, so
+# conf.private.yml only needs to define its own `pageInfo` and `sections`.
 #
-# For a public-only deploy with no internal links, delete the Internal entry
-# from `pages:` below AND the conf.private.yml mount in docker-compose.yml.
+# For a public-only deploy, delete the Internal entry below AND the
+# conf.private.yml bind mount in docker-compose.yml.
 # -----------------------------------------------------------------------------
 pages:
-  - name: Home
-    path: conf.yml
   - name: Internal
     path: conf.private.yml
 
