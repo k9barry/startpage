@@ -20,6 +20,8 @@ pageInfo:
   title: JAFCP Start Page
   description: Madison County Dispatch & Homelab
   navLinks:
+    - title: Home
+      path: /
     - title: GitHub
       path: https://github.com/k9barry/startpage
     - title: Dashy Docs
@@ -28,9 +30,11 @@ pageInfo:
 # -----------------------------------------------------------------------------
 # Multi-page setup.
 #
-# With Dashy's `pages:` feature, the main/home page is NOT automatically added
-# to the nav bar — you have to list it explicitly, otherwise there's no way to
-# navigate back from a sub-page without the browser back button.
+# Dashy's `pages:` entries MUST point to local or remote YAML config files —
+# not to routes. To let users navigate back to the main page from a sub-page,
+# add a Home entry to `navLinks:` above (which takes real URL paths), NOT to
+# `pages:` — otherwise Dashy tries to fetch the route as a config file and
+# the whole dashboard fails with "Unable to load config from '/'".
 #
 # The "Internal" page loads from conf.private.yml, which is gitignored and
 # bind-mounted into /app/user-data/ by docker-compose.yml. The compose mount
@@ -41,8 +45,6 @@ pageInfo:
 # block AND the conf.private.yml mount in docker-compose.yml.
 # -----------------------------------------------------------------------------
 pages:
-  - name: Home
-    path: /
   - name: Internal
     path: conf.private.yml
 
@@ -54,7 +56,7 @@ appConfig:
   defaultOpeningMethod: newtab
   statusCheck: false
   statusCheckInterval: 0
-  faviconApi: allesedv
+  faviconApi: google
   preventWriteToDisk: false
   preventLocalSave: false
   enableErrorReporting: false
@@ -79,7 +81,7 @@ sections:
         statusCheck: true
       - title: Nginx Proxy Manager
         url: https://npm.cleaver.me
-        icon: hl-nginxproxymanager
+        icon: hl-nginx-proxy-manager
       - title: Frigate NVR
         url: https://frigate.cleaver.me
         icon: hl-frigate
@@ -112,7 +114,7 @@ sections:
         icon: hl-n8n
       - title: Tdarr
         url: https://tdarr.cleaver.me
-        icon: hl-tdarr
+        icon: fas fa-film
       - title: MonkeyType
         url: https://type.cleaver.me
         icon: favicon
