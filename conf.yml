@@ -20,8 +20,6 @@ pageInfo:
   title: JAFCP Start Page
   description: Madison County Dispatch & Homelab
   navLinks:
-    - title: Home
-      path: https://home.jafcp.com/
     - title: GitHub
       path: https://github.com/k9barry/startpage
     - title: Dashy Docs
@@ -30,21 +28,25 @@ pageInfo:
 # -----------------------------------------------------------------------------
 # Multi-page setup.
 #
-# Dashy's `pages:` entries MUST point to local or remote YAML config files —
-# not to routes. To let users navigate back to the main page from a sub-page,
-# add a Home entry to `navLinks:` above (which takes real URL paths), NOT to
-# `pages:` — otherwise Dashy tries to fetch the route as a config file and
-# the whole dashboard fails with "Unable to load config from '/'".
+# Dashy's `pages:` entries MUST point to local or remote YAML config files.
+# A bare route like `/` won't work — Dashy tries to parse it as YAML and
+# errors with "Unable to load config from '/'".
 #
-# The "Internal" page loads from conf.private.yml, which is gitignored and
+# To put a Home button next to Internal in Dashy's page switcher, we point
+# Home at this same conf.yml. Dashy loads it as a page and renders the same
+# sections, giving you a reliable "return to main" tab.
+#
+# The Internal page loads from conf.private.yml, which is gitignored and
 # bind-mounted into /app/user-data/ by docker-compose.yml. The compose mount
 # is strict (create_host_path: false), so the file is guaranteed to exist at
-# runtime or the container won't start — see docker-compose.yml.
+# runtime or the container won't start.
 #
-# For a public-only deploy with no internal links, delete both this `pages:`
-# block AND the conf.private.yml mount in docker-compose.yml.
+# For a public-only deploy with no internal links, delete the Internal entry
+# from `pages:` below AND the conf.private.yml mount in docker-compose.yml.
 # -----------------------------------------------------------------------------
 pages:
+  - name: Home
+    path: conf.yml
   - name: Internal
     path: conf.private.yml
 
